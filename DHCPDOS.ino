@@ -32,9 +32,10 @@ void loop() {
   WiFi.hostname("");
   WiFi.begin(ssid, password);
 
+  int wait = 0;
   int dots = 0;
   // wait for connection
-  while (WiFi.status() != WL_CONNECTED) {
+  while ((WiFi.status() != WL_CONNECTED) && (wait < 240)) {
     delay(500);
     Serial.print(".");
     dots++;
@@ -43,12 +44,17 @@ void loop() {
        Serial.println("");
        dots = 0;
     }
+    wait++;
   }
 
-  Serial.println("");
-  Serial.println("WiFi connected");  
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  if (WiFi.status() == WL_CONNECTED) {
+    Serial.println("");
+    Serial.println("WiFi connected");  
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+  } else {
+    Serial.println("WiFi failed to connected");
+  }
   WiFi.disconnect();
   // increment mac address
   char hex = 5;
